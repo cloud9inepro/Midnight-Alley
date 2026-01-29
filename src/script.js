@@ -16,6 +16,26 @@ import * as dat from 'lil-gui'
 // Canvas
 const canvas = document.querySelector('canvas.webgl')
 
+// load manager
+const loadingManager = new THREE.LoadingManager()
+loadingManager.onStart = () => {
+    console.log('loading started')
+}
+loadingManager.onLoad = () => {
+    console.log('loading complete')
+}
+loadingManager.onProgress = (url, itemsLoaded, itemsTotal) => {
+    console.log(`loading file: ${url}.\nLoaded ${itemsLoaded} of ${itemsTotal} files`)
+}
+loadingManager.onError = (url) => {
+    console.log(`there was an error loading ${url}`)
+}   
+ const loaderEl = document.getElementById('loader')
+ loadingManager.onLoad = () => {
+            loaderEl.style.display = 'none'
+            introAnimation()
+        }
+    
 
 //texture loader
 const textureLoader = new THREE.TextureLoader()
@@ -155,7 +175,7 @@ let wire;
 let cctv;
 let sign;
 
-const GLTFloader = new GLTFLoader()
+const GLTFloader = new GLTFLoader(loadingManager)
 
 // car model
  GLTFloader.load('/models/porche.glb', (gltf)=>{
